@@ -18,12 +18,14 @@ class UI {
                         <div class="col-md-4">
                             <img style="width:150px;" src="http://localhost:7000${book.imagePath}" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="card-block px2">
                                 <h4 class="card-title">${book.title}</h4>
                                 <p class="card-text">${book.author}</p>
-                                <a href="#" class="btn btn-danger delete" _id="${book._id}">X</a>
                             </div>
+                        </div>
+                        <div class="col-md-2 pt-4">
+                            <a href="#" class="btn btn-danger delete" _id="${book._id}">X</a>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -45,12 +47,23 @@ class UI {
         document.getElementById('book-form').reset();
     }
 
-    renderMessage() {
-        
+    renderMessage(message, colorMessage, secondsToRemove) {
+        const div = document.createElement('div');
+        div.className = `alert alert-${colorMessage} message`;
+        div.appendChild(document.createTextNode(message));
+
+        const container = document.querySelector('.col-md-4');
+        const bookForm = document.querySelector('#book-form');
+
+        container.insertBefore(div, bookForm);
+        setTimeout(() => {
+            document.querySelector('.message').remove();
+        }, secondsToRemove);
     }
 
-    deleteBook() {
-
+    async deleteBook(bookId) {
+        await bookService.deleteBook(bookId);
+        this.renderBooks();
     }
 
 };
